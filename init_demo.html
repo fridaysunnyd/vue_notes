@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>组件创建</title>
+  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+  <style>
+    .wrap{
+      padding: 50px;
+    }
+  </style>
+</head>
+<body>
+<div class="wrap">
+  <div id="app">
+    <strong>例子1</strong><br><br>
+    {{ message }}
+  </div>
+  <hr>
+  <div id="app2">
+    <strong>例子2</strong><br><br>
+    {{ message }}
+  </div>
+  <hr>
+  <div id="app3">
+    <strong>例子3</strong><br><br>
+    <todo-item
+      v-for="item in groceryList"
+      v-bind:todo="item"
+      v-bind:key="item.id"
+    ></todo-item>
+  </div>
+  <hr>
+  <div id="app4">
+    <strong>例子4</strong><br><br>
+    <p>{{ message }}</p>
+    <button v-on:click="reverseMessage">反转消息</button>
+  </div>
+  <hr>
+  <div id="app5">
+    <p>{{ message }}</p>
+    <input v-model="message">
+  </div>  
+</div>
+</body>
+<script>
+/* 创建挂载 */
+//el挂载
+var app = new Vue({
+  el: '#app',
+  data: {
+    message: 'Hello Vue!'
+  }
+})
+//mount挂载
+new Vue({
+  data: {
+    message: 'Hello Vue!'
+  }
+}).$mount('#app2')
+//创建组件
+Vue.component('todo-item', {
+  props: ['todo'],
+  template: '<li>{{ todo.text }}</li>'
+})
+var app3 = new Vue({
+  el: '#app3',
+  data: {
+    groceryList: [
+      { id: 0, text: '列表项1' },
+      { id: 1, text: '列表项2' },
+      { id: 2, text: '列表项3' }
+    ]
+  }
+})
+/* 响应式数据 */
+var app4 = new Vue({
+  el: '#app4',
+  data: {
+    message: 'Hello Vue.js!'
+  },
+  methods: {
+    reverseMessage: function () {
+      this.message = this.message.split('').reverse().join('')
+    }
+  }
+})
+var app5 = new Vue({
+  el: '#app5',
+  data: {
+    message: 'Hello Vue!'
+  }
+})
+</script>
+</html>

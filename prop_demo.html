@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>组件通信</title>
+  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+  <style>
+    .wrap{
+      padding: 50px;
+    }
+  </style>
+</head>
+<body>
+<div class="wrap">
+  <div id="app1">
+    <strong>例子1</strong><br><br>
+    <todo-item
+      v-for="item in groceryList"
+      v-bind:todo="item"
+      v-bind:key="item.id"
+    ></todo-item>
+  </div>
+  <hr>
+  <div id="app2">
+    <strong>{{title}}</strong><br><br>
+    <todo
+      v-for="item in groceryList"
+      :todo="item"
+      :key="item.id"
+      @change="changeTitle"
+    ></todo>
+  </div>
+  <hr>
+</div>
+</body>
+<script>
+/* 父子组件通信 */
+//全局注册
+Vue.component('todo-item', {
+  props: ['todo'],//子传父
+  template: '<li>{{ todo.text }}</li>'
+})
+var app1 = new Vue({
+  el: '#app1',
+  data: {
+    groceryList: [
+      { id: 0, text: '列表项1' },
+      { id: 1, text: '列表项2' },
+      { id: 2, text: '列表项3' }
+    ]
+  }
+})
+//局部注册
+const component = {
+  props: {
+    todo:Object
+  },
+  data(){//组件data要用函数式，避免组件多次使用数据共享造成混乱
+    return {
+      count: 0
+    }
+  },
+  methods:{
+    change(){
+      this.$emit('change',this.count++)//父传子
+    }
+  },
+  template: '<li @click="change">{{ todo.text }}</li>'
+}
+var app2 = new Vue({
+  el: '#app2',
+  data: {
+    title:'例子2',
+    groceryList: [
+      { id: 0, text: 'click me a' },
+      { id: 1, text: 'click me b' },
+      { id: 2, text: 'click me c' }
+    ]
+  },
+  methods:{
+    changeTitle(val){
+      this.title = val
+    }
+  },
+  components:{
+    todo:component
+  }
+})
+</script>
+</html>

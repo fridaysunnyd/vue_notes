@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>生命周期</title>
+  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+</head>
+<body>
+  <div id="app">{{a}}</div>
+  <button id="btn">
+    销毁组件
+  </button>
+</body>
+<script>
+  const app = new Vue({
+    el:'#app',
+    data: {
+      a: 1,
+      timer:null
+    },
+    created() {
+      //data数据初始化即变成响应式时触发
+      //最早可以拿到data数据
+      console.log('a is: ' + this.a)
+    },
+    mounted(){
+      //页面挂载后触发
+      console.log('mounted')
+      this.timer = setTimeout(()=>{
+        this.a = 2
+      },3000)
+    },
+    updated(){
+      //数据在页面更新完成后触发
+      console.log('a is: ' + this.a)
+    },
+    beforeDestroy(){
+      //组件销毁时触发
+      clearTimeout(this.timer)
+      console.log('beforeDestroy')
+    }
+  })
+  const btn = document.getElementById('btn')
+  btn.addEventListener('click',()=>{
+    app.$destroy()
+  })
+</script>
+</html>
